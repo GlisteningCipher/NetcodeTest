@@ -1,7 +1,7 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
 
 namespace Breakout.UI
 {
@@ -9,13 +9,17 @@ namespace Breakout.UI
     {
         [SerializeField] TextMeshProUGUI playerCountText;
         [SerializeField] PersistentPlayerRuntimeCollection playerList;
-        [SerializeField] GameNetPortal portal;
 
         [SerializeField] Canvas mainMenuUI;
         [SerializeField] Button readyButton;
 
+        GameNetPortal portal;
+
         void Awake()
         {
+            portal = Object.FindObjectOfType<GameNetPortal>();
+            Assert.IsNotNull(portal, "No GameNetPortal found. Did you start the game from the startup scene?");
+
             playerList.ItemAdded += UpdateNumberOfPlayers;
             playerList.ItemRemoved += UpdateNumberOfPlayers;
             playerList.ItemAdded += UpdateReadyStatus;

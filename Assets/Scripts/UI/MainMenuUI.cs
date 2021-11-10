@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 using Breakout.Client;
 
@@ -6,8 +7,15 @@ namespace Breakout.UI
 {
     public class MainMenuUI : MonoBehaviour
     {
-        [SerializeField] GameNetPortal portal;
         [SerializeField] Canvas lobbyUI;
+
+        GameNetPortal portal;
+
+        void Awake()
+        {
+            portal = Object.FindObjectOfType<GameNetPortal>();
+            Assert.IsNotNull(portal, "No GameNetPortal found. Did you start the game from the startup scene?");
+        }
 
         // Start is called before the first frame update
         public void OnHostClicked()
