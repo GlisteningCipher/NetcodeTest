@@ -24,6 +24,9 @@ namespace Breakout.UI
             playerList.ItemRemoved += UpdateNumberOfPlayers;
             playerList.ItemAdded += UpdateReadyStatus;
             playerList.ItemRemoved += UpdateReadyStatus;
+
+            UpdateNumberOfPlayers(null);
+            UpdateReadyStatus(null);
         }
 
         void OnDestroy()
@@ -34,12 +37,12 @@ namespace Breakout.UI
             playerList.ItemRemoved -= UpdateReadyStatus;
         }
 
-        void UpdateNumberOfPlayers(PersistentPlayer player)
+        void UpdateNumberOfPlayers(PersistentPlayer _)
         {
             playerCountText.SetText($"Players: {playerList.Items.Count}/{GameManager.maxPlayers}");
         }
 
-        void UpdateReadyStatus(PersistentPlayer player)
+        void UpdateReadyStatus(PersistentPlayer _)
         {
             readyButton.interactable = (playerList.Items.Count == GameManager.maxPlayers);
         }

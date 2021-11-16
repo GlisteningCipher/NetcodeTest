@@ -34,7 +34,12 @@ namespace Breakout
                     //assign paddle to client
                     var no = paddle.GetComponent<NetworkObject>();
                     no.SpawnWithOwnership(playerList.Items[i].OwnerClientId, true);
+                    no.AutoObjectParentSync = true;
                     no.TrySetParent(transform);
+                }
+                else
+                {
+                    paddle.transform.SetParent(transform);
                 }
             }
 
@@ -44,8 +49,12 @@ namespace Breakout
             {
                 var no = ball.GetComponent<NetworkObject>();
                 no.Spawn(true);
+                no.AutoObjectParentSync = true;
                 no.TrySetParent(transform);
-
+            }
+            else
+            {
+                ball.transform.SetParent(transform);
             }
 
             GameStarted = true;

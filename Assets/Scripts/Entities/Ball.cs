@@ -22,12 +22,6 @@ namespace Breakout
             if (!IsServer) rb.simulated = false;
         }
 
-        public override void OnDestroy()
-        {
-            if (NetworkObject != null && NetworkObject.IsSpawned)
-                NetworkObject.Despawn();
-        }
-
         float HitFactor(Vector2 ballPos, Vector2 racketPos, float racketHeight)
         {
             return (ballPos.y - racketPos.y) / racketHeight;

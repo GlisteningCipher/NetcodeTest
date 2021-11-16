@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 using Breakout.Client;
 
@@ -15,6 +16,11 @@ namespace Breakout.UI
         {
             portal = GameNetPortal.Instance;
             Assert.IsNotNull(portal, "No GameNetPortal found. Did you start the game from the startup scene?");
+        }
+
+        public void OnOfflineClicked()
+        {
+            SceneManager.LoadScene("Game");
         }
 
         // Start is called before the first frame update
