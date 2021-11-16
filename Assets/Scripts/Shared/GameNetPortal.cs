@@ -63,6 +63,7 @@ namespace Breakout
 
         protected override void Awake()
         {
+            base.Awake();
             clientPortal = GetComponent<ClientGameNetPortal>();
             serverPortal = GetComponent<ServerGameNetPortal>();
         }
@@ -82,6 +83,7 @@ namespace Breakout
                 NetManager.OnClientConnectedCallback -= ClientNetworkReadyWrapper;
                 if (NetManager.SceneManager != null) NetManager.SceneManager.OnSceneEvent -= OnSceneEvent;
             }
+            base.OnDestroy();
         }
 
         private void OnSceneEvent(SceneEvent sceneEvent)

@@ -13,7 +13,7 @@ namespace Breakout.UI
 
         void Awake()
         {
-            portal = Object.FindObjectOfType<GameNetPortal>();
+            portal = GameNetPortal.Instance;
             Assert.IsNotNull(portal, "No GameNetPortal found. Did you start the game from the startup scene?");
         }
 

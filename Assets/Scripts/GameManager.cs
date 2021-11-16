@@ -1,15 +1,18 @@
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Breakout
 {
     public class GameManager : NetworkSingleton<GameManager>
     {
+        public int PlayerCount => playerList.Items.Count;
+        public const int maxPlayers = 2;
+
         [SerializeField] GameObject paddlePrefab;
         [SerializeField] GameObject ballPrefab;
 
-        [SerializeField] List<Transform> spawns;
+        [SerializeField] Transform[] spawns = new Transform[maxPlayers];
 
         [SerializeField] PersistentPlayerRuntimeCollection playerList;
 
@@ -18,9 +21,6 @@ namespace Breakout
         private static NetworkVariable<bool> gameStartedNetVar = new NetworkVariable<bool>();
         public static bool GameStarted { get => gameStartedNetVar.Value; private set { gameStartedNetVar.Value = value; } }
 
-        public int PlayerCount => playerList.Items.Count;
-        public const int maxPlayers = 2;
-
         public void StartGame()
         {
             if (IsOnline && !IsServer) return;
@@ -28,18 +28,25 @@ namespace Breakout
             //spawn players
             for (int i = 0; i < maxPlayers; ++i)
             {
-                var paddle = Instantiate(paddlePrefab, spawns[i].position, Quaternion.identity, transform);
+                var paddle = Instantiate(paddlePrefab, spawns[i].position, Quaternion.identity);
                 if (IsOnline)
                 {
                     //assign paddle to client
                     var no = paddle.GetComponent<NetworkObject>();
                     no.SpawnWithOwnership(playerList.Items[i].OwnerClientId, true);
+                    no.TrySetParent(transform);
                 }
             }
 
             //spawn ball
-            var ball = Instantiate(ballPrefab, transform);
-            if (IsOnline) ball.GetComponent<NetworkObject>().Spawn(true);
+            var ball = Instantiate(ballPrefab);
+            if (IsOnline)
+            {
+                var no = ball.GetComponent<NetworkObject>();
+                no.Spawn(true);
+                no.TrySetParent(transform);
+
+            }
 
             GameStarted = true;
         }
@@ -50,6 +57,12 @@ namespace Breakout
             if (IsOnline && !IsServer) return;
             foreach (Transform child in transform) Destroy(child.gameObject);
             GameStarted = false;
+        }
+
+        public void LeaveSession()
+        {
+            GameNetPortal.Instance.RequestDisconnect();
+            SceneManager.LoadScene("MainMenu");
         }
 
     }
